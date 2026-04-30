@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import './Footer.css'
-import MapComponent from '../Map/Map'
+
+const MapComponent = lazy(() => import('../Map/Map'))
 
 export default function Footer() {
   return (
@@ -29,7 +30,9 @@ export default function Footer() {
           </div>
           <div className="col map-col">
             <h4>Ubicación</h4>
-            <MapComponent />
+            <Suspense fallback={<div className="map-loading">Cargando mapa...</div>}>
+              <MapComponent />
+            </Suspense>
           </div>
         </div>
 

@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './BudgetBuilder.css';
 import ITEM_GROUPS from '../constants/items';
-import { pdf } from "@react-pdf/renderer";
-import { BudgetPDF } from "./BudgetPDF";
 
 export default function BudgetBuilder() {
   const [people, setPeople] = useState(() => {
@@ -61,10 +59,11 @@ export default function BudgetBuilder() {
   }, [selected, fixedItems, optionalItems]);
 
   const total = useMemo(() => {
-    return allItems.reduce(
-      (sum, it) => sum + it.price * people * (it.perPersonFactor || 1),
-      0
-    );
+    return allItems.reduce((sum, it) => {
+      const factor = it.perPersonFactor || 1
+      const qty = Math.ceil(people * factor)
+      return sum + it.price * qty
+    }, 0)
   }, [allItems, people]);
 
   const renderCategory = category => {
@@ -104,6 +103,11 @@ export default function BudgetBuilder() {
   // Genera el PDF y lo guarda en un blob
   const handleGeneratePDF = async () => {
     setGenerating(true);
+    const [{ pdf }, { BudgetPDF }] = await Promise.all([
+      import('@react-pdf/renderer'),
+      import('./BudgetPDF')
+    ]);
+
     const blob = await pdf(<BudgetPDF people={people} allItems={allItems} total={total} />).toBlob();
     setPdfBlob(blob);
     setGenerating(false);

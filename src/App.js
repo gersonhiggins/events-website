@@ -1,62 +1,47 @@
 import './App.css';
 import './animations/animate-on-view.css';
-import NavBar from './components/navbar/NavBar'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Footer from './components/footer/Footer';
-import Icons from './components/icons/Icons';
-import PresupuestoPage from './pages/PresupuestoPage'
-import Gallery from './components/gallery/Gallery';
-import Body from './components/body/Body'
-import images from './constants/images'
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import Loader from './components/Loader/Loader'
 
+const NavBar = lazy(() => import('./components/navbar/NavBar'))
+const Footer = lazy(() => import('./components/footer/Footer'))
+const Icons = lazy(() => import('./components/icons/Icons'))
+const PresupuestoPage = lazy(() => import('./pages/PresupuestoPage'))
+const Gallery = lazy(() => import('./components/gallery/Gallery'))
+const Body = lazy(() => import('./components/body/Body'))
+
 function App() {
-  const [loaded, setLoaded] = useState(false)
-  const [progress, setProgress] = useState(0)
+  const [showDeferredUI, setShowDeferredUI] = useState(false)
 
   useEffect(() => {
-    const entries = Object.values(images).filter(Boolean)
-    const total = entries.length
-    let done = 0
-    if (total === 0) {
-      setLoaded(true)
-      return
+    const loadDeferred = () => setShowDeferredUI(true)
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadDeferred, { timeout: 1000 })
+    } else {
+      const timeoutId = window.setTimeout(loadDeferred, 1000)
+      return () => window.clearTimeout(timeoutId)
     }
-
-    const onLoaded = () => {
-      done += 1
-      setProgress(done)
-      if (done >= total) setLoaded(true)
-    }
-
-    entries.forEach(src => {
-      const img = new Image()
-      img.src = src
-      if (img.complete) {
-        onLoaded()
-      } else {
-        img.addEventListener('load', onLoaded)
-        img.addEventListener('error', onLoaded)
-      }
-    })
   }, [])
-
-  if (!loaded) {
-    return <Loader progress={progress} total={Object.values(images).length} />
-  }
 
   return (
     <BrowserRouter>
       <div className="App">
-        <NavBar />
-        <Icons />
-        <Routes>
-          <Route path="/" element={<Body />} />
-          <Route path="/presupuesto" element={<PresupuestoPage />} />
-          <Route path="/galeria" element={<Gallery />} />
-        </Routes>
-        <Footer />
+        <Suspense fallback={<Loader />}>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Body />} />
+            <Route path="/presupuesto" element={<PresupuestoPage />} />
+            <Route path="/galeria" element={<Gallery />} />
+          </Routes>
+        </Suspense>
+
+        {showDeferredUI ? (
+          <Suspense fallback={null}>
+            <Icons />
+            <Footer />
+          </Suspense>
+        ) : null}
       </div>
     </BrowserRouter>
   );

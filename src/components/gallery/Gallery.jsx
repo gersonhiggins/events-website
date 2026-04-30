@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Masonry from "react-masonry-css";
-import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import "./Gallery.css";
 import gallery_img from "../../constants/galleryimages";
@@ -8,6 +7,20 @@ import gallery_img from "../../constants/galleryimages";
 export default function Gallery() {
   const [isOpen, setIsOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [LightboxComponent, setLightboxComponent] = useState(null);
+  const [lightboxLoading, setLightboxLoading] = useState(false);
+
+  const openLightbox = async (index) => {
+    setPhotoIndex(index);
+    setIsOpen(true);
+
+    if (!LightboxComponent) {
+      setLightboxLoading(true);
+      const module = await import("yet-another-react-lightbox");
+      setLightboxComponent(() => module.default);
+      setLightboxLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -19,24 +32,24 @@ export default function Gallery() {
         {gallery_img.map((img, i) => (
           <img
             key={i}
-            src={img}
+            src={img.src}
+            srcSet={img.srcset}
+            sizes={img.sizes}
             alt={`Gallery ${i}`}
             className="gallery-img"
             loading="lazy"
-            onClick={() => {
-              setPhotoIndex(i);
-              setIsOpen(true);
-            }}
+            onClick={() => openLightbox(i)}
           />
         ))}
       </Masonry>
 
-      {isOpen && (
-        <Lightbox
+      {lightboxLoading && <div className="gallery-lightbox-loading">Cargando galería...</div>}
+      {isOpen && LightboxComponent && (
+        <LightboxComponent
           open={isOpen}
           close={() => setIsOpen(false)}
           index={photoIndex}
-          slides={gallery_img.map((src) => ({ src }))}
+          slides={gallery_img.map((img) => ({ src: img.src }))}
           on={{ view: ({ index }) => setPhotoIndex(index) }}
         />
       )}
