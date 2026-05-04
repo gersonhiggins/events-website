@@ -149,7 +149,7 @@ export default function BudgetBuilder() {
       <ul>
         {fixedItems.map(it => (
           <li key={keyFor(it.group, it.id)} className='checked-item'>
-            {it.name} — ${it.price.toFixed(2)}
+            {it.name}{it.tul ? ` - Tul: ${Math.ceil(it.tul * people)}m Flores: ${Math.ceil(it.flower * people)}` : ''} — ${(it.price * it.perPersonFactor * people).toFixed(2)}
           </li>
         ))}
       </ul>
@@ -176,7 +176,7 @@ export default function BudgetBuilder() {
             <tr key={keyFor(it.group, it.id)}>
               <td>{Math.ceil(people * (it.perPersonFactor || 1))}</td>
               <td>{it.name}</td>
-              <td>$ {it.price.toFixed(2)}</td>
+              <td>${it.price.toFixed(2)}</td>
               <td>$ {(it.price * Math.ceil(people * (it.perPersonFactor || 1))).toFixed(2)}</td>
             </tr>
           ))}

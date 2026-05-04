@@ -85,8 +85,8 @@ export const ITEM_GROUPS = {
 
   ],
   Agregados: [
-    { id: 'musica', name: 'musica y dj (no obligatorio)', price: 150, fixed: true, perPersonFactor: 0.0000001},
-    { id: 'decoracion', name: 'decoración (solo bodas)', price: 250, fixed: true, perPersonFactor: 0.0000001 }
+    { id: 'musica', name: 'musica y dj (no obligatorio)', price: 3, fixed: true, perPersonFactor: 0.0000001},
+    { id: 'decoracion', name: 'decoración (solo bodas)', price: 3, fixed: true, perPersonFactor: 0.92, tul:0.50, flower:0.42  }
   ]
 }
 
