@@ -78,14 +78,14 @@ export const ITEM_GROUPS = {
     { id: 'mousse_chocolate', name: 'Mousse de chocolate', price: 3.00, perPersonFactor: 1 }
   ],
   Bebidas: [
-    { id: 'agua_botella_325ml', name: 'Agua en botella 325 ml', price: 2.00, perPersonFactor: 1 },
-    { id: 'gaseosa', name: 'Gaseosa', price: 2.00, perPersonFactor: 1 },
-    { id: 'vino_tinto_blanco_espumante', name: 'Vino (tinto, blanco, espumante)', price: 8.00, perPersonFactor: 0.22 },
+    { id: 'agua_botella_325ml', name: 'Agua en botella 325 ml', price: 1.40, perPersonFactor: 1 },
+    { id: 'gaseosa', name: 'Gaseosa', price: 1.40, perPersonFactor: 1 },
+    { id: 'vino_tinto_blanco_espumante', name: 'Descorche vino', price: 7.00, perPersonFactor: 0.22 },
     { id: 'descorche_whisky_vodka_ron_licor', name: 'Descorche whisky, vodka, ron, licor', price: 60.00, perPersonFactor: 0.15 },
 
   ],
   Agregados: [
-    { id: 'musica', name: 'musica y dj (no obligatorio)', price: 3, fixed: true, perPersonFactor: 0.0000001},
+    { id: 'musica', name: 'musica y dj (no obligatorio)', price: 150, fixed: true, perPersonFactor: 0.0000001},
     { id: 'decoracion', name: 'decoración (solo bodas)', price: 3, fixed: true, perPersonFactor: 0.92, tul:0.50, flower:0.42  }
   ]
 }
